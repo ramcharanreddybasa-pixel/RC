@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowUpRight, Copy, Check, Terminal as TerminalIcon, Play, RotateCcw, Sparkles, Mail, ExternalLink } from 'lucide-react';
 import { NeuralCanvas } from './NeuralCanvas.tsx';
 import { playClickSound } from '../utils/sound.ts';
+import { copyToClipboard } from '../utils/clipboard.ts';
 
 const USER_EMAIL = 'ramchranreddybasa@gmail.com';
 
@@ -86,11 +87,13 @@ export const Hero: React.FC<HeroProps> = ({ theme, onOpenCommandPalette }) => {
   const [isExecuting, setIsExecuting] = useState(false);
   const [consoleLogs, setConsoleLogs] = useState<string>(interactiveSnippets[0].output);
 
-  const handleCopyEmail = () => {
+  const handleCopyEmail = async () => {
     playClickSound('success');
-    navigator.clipboard.writeText(USER_EMAIL);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    const success = await copyToClipboard(USER_EMAIL);
+    if (success) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   const handleRunTest = () => {

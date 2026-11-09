@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, ArrowRight, Sun, Moon, Calendar, Award, Copy, Check, ExternalLink, X, Volume2, VolumeX } from 'lucide-react';
 import { playClickSound, isSoundEnabled, setSoundEnabled } from '../utils/sound.ts';
+import { copyToClipboard } from '../utils/clipboard.ts';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -41,14 +42,26 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     if (next) playClickSound('success');
   };
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText('ramchranreddybasa@gmail.com');
-    setCopied(true);
-    playClickSound('success');
-    setTimeout(() => {
-      setCopied(false);
-      onClose();
-    }, 1200);
+  const openExternalLink = (url: string) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleCopy = async () => {
+    const success = await copyToClipboard('ramchranreddybasa@gmail.com');
+    if (success) {
+      setCopied(true);
+      playClickSound('success');
+      setTimeout(() => {
+        setCopied(false);
+        onClose();
+      }, 1200);
+    }
   };
 
   const scrollTo = (id: string) => {
@@ -164,7 +177,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       icon: ExternalLink,
       action: () => {
         playClickSound('tick');
-        window.open('https://www.linkedin.com/in/basaramcharanreddy-undefined-5954b1439', '_blank');
+        openExternalLink('https://www.linkedin.com/in/basaramcharanreddy-undefined-5954b1439');
         onClose();
       },
     },
@@ -176,7 +189,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       icon: ExternalLink,
       action: () => {
         playClickSound('tick');
-        window.open('https://github.com/ramcharanreddybasa-pixel', '_blank');
+        openExternalLink('https://github.com/ramcharanreddybasa-pixel');
         onClose();
       },
     },

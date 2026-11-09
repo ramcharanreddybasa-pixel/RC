@@ -22,41 +22,68 @@ export default function App() {
   const [isResultCardDemoOpen, setIsResultCardDemoOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
 
-  // Theme state: initialized from localStorage or default 'dark'
+  // Theme state: safe initialization with try/catch for iframe sandbox privacy modes
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'light' || savedTheme === 'dark') {
-        return savedTheme;
+    try {
+      if (typeof window !== 'undefined') {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+          return savedTheme;
+        }
       }
+    } catch {
+      // Storage access may be restricted in sandboxed iframes
     }
     return 'dark';
   });
 
   // Apply theme to document element
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    if (theme === 'light') {
-      document.documentElement.classList.add('light');
-      document.documentElement.classList.remove('dark');
-    } else {
-      document.documentElement.classList.add('dark');
-      document.documentElement.classList.remove('light');
+    try {
+      document.documentElement.setAttribute('data-theme', theme);
+      if (theme === 'light') {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      }
+    } catch {
+      // Ignore DOM mutation errors
     }
   }, [theme]);
 
   const toggleTheme = () => {
     setTheme((prev) => {
       const nextTheme = prev === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('theme', nextTheme);
+      try {
+        localStorage.setItem('theme', nextTheme);
+      } catch {
+        // Handle restricted storage in iframe
+      }
       return nextTheme;
     });
   };
+
+  // Body scroll locking when modals are open
+  useEffect(() => {
+    const isAnyModalOpen = isRestaurantDemoOpen || isResultCardDemoOpen || isCommandPaletteOpen;
+    if (isAnyModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isRestaurantDemoOpen, isResultCardDemoOpen, isCommandPaletteOpen]);
 
   // Track active section on scroll
   useEffect(() => {
     const sectionIds = ['hero', 'about', 'projects', 'skills', 'milestones', 'contact'];
     
+    if (typeof IntersectionObserver === 'undefined') return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -66,7 +93,7 @@ export default function App() {
         });
       },
       {
-        rootMargin: '-30% 0px -50% 0px',
+        rootMargin: '-20% 0px -40% 0px',
         threshold: 0,
       }
     );

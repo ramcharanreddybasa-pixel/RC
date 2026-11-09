@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Mail, Copy, Check, ExternalLink, Send, ArrowUpRight } from 'lucide-react';
+import { Mail, Copy, Check, Send, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { copyToClipboard } from '../utils/clipboard.ts';
+import { playClickSound } from '../utils/sound.ts';
 
 const USER_EMAIL = 'ramchranreddybasa@gmail.com';
 const USER_LINKEDIN = 'https://www.linkedin.com/in/basaramcharanreddy-undefined-5954b1439';
@@ -10,21 +12,31 @@ export const Contact: React.FC = () => {
   const [name, setName] = useState('');
   const [subject, setSubject] = useState('Project Collaboration');
   const [message, setMessage] = useState('');
+  const [composedMailto, setComposedMailto] = useState<string | null>(null);
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText(USER_EMAIL);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopyEmail = async () => {
+    playClickSound('success');
+    const success = await copyToClipboard(USER_EMAIL);
+    if (success) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    playClickSound('success');
     const mailto = `mailto:${USER_EMAIL}?subject=${encodeURIComponent(
       `[Portfolio Inquiry - ${subject}] from ${name || 'Colleague'}`
     )}&body=${encodeURIComponent(
       `Hi Ramcharan,\n\n${message}\n\nBest regards,\n${name}`
     )}`;
-    window.open(mailto, '_blank');
+    setComposedMailto(mailto);
+    try {
+      window.location.href = mailto;
+    } catch {
+      // Fallback handled by in-app button
+    }
   };
 
   const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${USER_EMAIL}&su=Hello%20Ramcharan`;
@@ -206,6 +218,21 @@ export const Contact: React.FC = () => {
                     required
                   />
                 </div>
+
+                {composedMailto && (
+                  <div className="p-3.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-xs font-mono-code text-emerald-400 flex items-center justify-between gap-3 animate-in fade-in duration-150">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 shrink-0" />
+                      <span>Message generated! Opening mail client...</span>
+                    </div>
+                    <a
+                      href={composedMailto}
+                      className="underline font-bold hover:text-white"
+                    >
+                      Click here to launch ↗
+                    </a>
+                  </div>
+                )}
 
                 <button
                   type="submit"
