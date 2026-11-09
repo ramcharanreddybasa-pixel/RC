@@ -135,7 +135,7 @@ export const Projects: React.FC<ProjectsProps> = ({
                     </div>
                     <div className="p-2.5 rounded bg-[var(--surface-card)] border border-[var(--border-hairline)] flex items-center justify-between">
                       <span>3. Ledger State Mutation</span>
-                      <span className="text-emerald-500">Generate #TB-XXX &amp; Append</span>
+                      <span className="text-emerald-500">Generate #TB-XXX and Append</span>
                     </div>
                   </div>
                 </div>
@@ -257,7 +257,7 @@ export const Projects: React.FC<ProjectsProps> = ({
                   <div className="space-y-2 text-xs font-mono-code text-[var(--text-secondary)] pt-3 border-t border-[var(--border-hairline)]">
                     <div className="flex items-center gap-2">
                       <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Minimum pass condition: All 5 disciplines $\ge$ 35 marks</span>
+                      <span>Minimum pass condition: All 5 disciplines ≥ 35 marks</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
@@ -279,11 +279,11 @@ export const Projects: React.FC<ProjectsProps> = ({
                     </div>
                     <div className="p-2.5 rounded bg-[var(--surface-card)] border border-[var(--border-hairline)] flex items-center justify-between">
                       <span>2. Threshold Evaluation</span>
-                      <span className="text-[var(--text-muted)]">Check any &lt; 35 $\rightarrow$ Fail</span>
+                      <span className="text-[var(--text-muted)]">Check any &lt; 35 → Fail</span>
                     </div>
                     <div className="p-2.5 rounded bg-[var(--surface-card)] border border-[var(--border-hairline)] flex items-center justify-between">
                       <span>3. Vector Rendering</span>
-                      <span className="text-emerald-500">Calculate % &amp; Grade Badge</span>
+                      <span className="text-emerald-500">Calculate % and Grade Badge</span>
                     </div>
                   </div>
                 </div>

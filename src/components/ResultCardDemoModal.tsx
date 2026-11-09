@@ -85,7 +85,7 @@ export const ResultCardDemoModal: React.FC<ResultCardDemoModalProps> = ({ isOpen
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono-code text-[var(--text-secondary)]">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)]" />
-              <span>Algorithm: 5-Subject Weighted Rubric (Pass $\ge$ 35/100 each)</span>
+              <span>Algorithm: 5-Subject Weighted Rubric (Pass ≥ 35/100 each)</span>
             </div>
             <a
               href="https://github.com/ramcharanreddybasa-pixel"
